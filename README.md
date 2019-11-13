@@ -11,3 +11,21 @@ cd ${project_path}/example
 flutter run
 
 ```
+
+## 引用
+
+
+### 必要权限android
+```
+ <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"></uses-permission>
+
+```
+
+### 必要权限ios
+
+```
+<key>NSMicrophoneUsageDescription</key>
+	<string>请求使用麦克风</string>
+```
