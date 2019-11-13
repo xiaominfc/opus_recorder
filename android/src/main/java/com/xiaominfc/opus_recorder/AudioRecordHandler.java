@@ -39,8 +39,6 @@ public class AudioRecordHandler implements Runnable {
                     }
                 }
             }
-
-
             try {
 
 
@@ -59,7 +57,7 @@ public class AudioRecordHandler implements Runnable {
                     maxVolumeEnd = System.currentTimeMillis();
                 }
             } catch (Exception e) {
-                logger.e(e.getMessage());
+                e.printStackTrace();
             } finally {
                 OpusRecorder.getInstance().stopRecording();
                 if (recordInstance != null) {
@@ -88,7 +86,7 @@ public class AudioRecordHandler implements Runnable {
                 }
             }
         } catch (Exception e) {
-            logger.e(e.getMessage());
+            e.printStackTrace();
         }
     }
 

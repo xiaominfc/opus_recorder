@@ -3,6 +3,8 @@ package com.xiaominfc.opus_recorder;
 
 import android.content.Context;
 import android.media.AudioManager;
+
+import io.flutter.Log;
 import top.oply.opuslib.OpusPlayer;
 
 public class AudioPlayerHandler{
@@ -65,21 +67,25 @@ public class AudioPlayerHandler{
         try {
             OpusPlayer.getInstance().stop();
         } catch (Exception e) {
+            Log.i("xiaominfc",e.getMessage());
+            e.printStackTrace();
         }finally {
             stopAnimation();
+            currentPlayPath = null;
         }
     }
 
     public boolean isPlaying() {
-        return null != th;
+        return null != currentPlayPath;
     }
 
     public void startPlay(String filePath) {
         this.currentPlayPath = filePath;
         try {
             OpusPlayer.getInstance().play(filePath);
-
         } catch (Exception e) {
+            e.printStackTrace();
+            Log.i("xiaominfc",e.getMessage());
             stopAnimation();
         }
     }
