@@ -1,0 +1,22 @@
+PODS:
+  - Flutter (1.0.0)
+  - opus_recorder (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `.symlinks/flutter/ios`)
+  - opus_recorder (from `.symlinks/plugins/opus_recorder/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: ".symlinks/flutter/ios"
+  opus_recorder:
+    :path: ".symlinks/plugins/opus_recorder/ios"
+
+SPEC CHECKSUMS:
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  opus_recorder: 5496548220677b5235c50b56e4ba51e07418d057
+
+PODFILE CHECKSUM: 7fb83752f59ead6285236625b82473f90b1cb932
+
+COCOAPODS: 1.8.3
