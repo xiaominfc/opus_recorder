@@ -28,88 +28,84 @@ public class AudioRecordHandler implements Runnable {
         this.fileName = fileName;
     }
 
-    public void run() {
-        try {
-            synchronized (mutex) {
-                while (!this.isRecording) {
-                    try {
-                        mutex.wait();
-                    } catch (InterruptedException e) {
-                        throw new IllegalStateException("Wait() interrupted!", e);
-                    }
-                }
-            }
-            try {
+		public void run() {
+			try {
+				synchronized (mutex) {
+					while (!this.isRecording) {
+						try {
+							mutex.wait();
+						} catch (InterruptedException e) {
+							throw new IllegalStateException("Wait() interrupted!", e);
+						}
+					}
+				}
+				try {
+					OpusRecorder.getInstance().startRecording(this.fileName);
+					recordTime = 0;
+					startTime = System.currentTimeMillis();
+					maxVolumeStart = System.currentTimeMillis();
+					while (this.isRecording) {
+						endTime = System.currentTimeMillis();
+						recordTime = (float) ((endTime - startTime) / 1000.0f);
+						if (recordTime >= MAX_SOUND_RECORD_TIME) {
+							//timeover
+							break;
+						}
+						maxVolumeEnd = System.currentTimeMillis();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+					OpusRecorder.getInstance().stopRecording();
+					if (recordInstance != null) {
+						recordInstance.stop();
+						recordInstance.release();
+						recordInstance = null;
+					}
+				}
+			}catch (Exception e){
 
+			}
 
-                OpusRecorder.getInstance().startRecording(this.fileName);
-                recordTime = 0;
-                startTime = System.currentTimeMillis();
-                maxVolumeStart = System.currentTimeMillis();
-                while (this.isRecording) {
-                    endTime = System.currentTimeMillis();
-                    recordTime = (float) ((endTime - startTime) / 1000.0f);
-                    if (recordTime >= MAX_SOUND_RECORD_TIME) {
-                           //MessageActivity.getUiHandler().sendEmptyMessage(
-                           //     HandlerConstant.RECORD_AUDIO_TOO_LONG);
-                        break;
-                    }
-                    maxVolumeEnd = System.currentTimeMillis();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                OpusRecorder.getInstance().stopRecording();
-                if (recordInstance != null) {
-                    recordInstance.stop();
-                    recordInstance.release();
-                    recordInstance = null;
-                } else {
-                }
-            }
-        }catch (Exception e){
+		}
 
-        }
+		private void setMaxVolume(short[] buffer, int readLen) {
+			try {
+				if (maxVolumeEnd - maxVolumeStart < 100) {
+					return;
+				}
+				maxVolumeStart = maxVolumeEnd;
+				int max = 0;
+				for (int i = 0; i < readLen; i++) {
+					if (Math.abs(buffer[i]) > max) {
+						max = Math.abs(buffer[i]);
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 
-    }
+		public float getRecordTime() {
+			return recordTime;
+		}
 
-    private void setMaxVolume(short[] buffer, int readLen) {
-        try {
-            if (maxVolumeEnd - maxVolumeStart < 100) {
-                return;
-            }
-            maxVolumeStart = maxVolumeEnd;
-            int max = 0;
-            for (int i = 0; i < readLen; i++) {
-                if (Math.abs(buffer[i]) > max) {
-                    max = Math.abs(buffer[i]);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+		public void setRecordTime(float len) {
+			recordTime = len;
+		}
 
-    public float getRecordTime() {
-        return recordTime;
-    }
+		public void setRecording(boolean isRec) {
+			synchronized (mutex) {
+				this.isRecording = isRec;
+				if (this.isRecording) {
+					mutex.notify();
+				}
+			}
+		}
 
-    public void setRecordTime(float len) {
-        recordTime = len;
-    }
-
-    public void setRecording(boolean isRec) {
-        synchronized (mutex) {
-            this.isRecording = isRec;
-            if (this.isRecording) {
-                mutex.notify();
-            }
-        }
-    }
-
-    public boolean isRecording() {
-        synchronized (mutex) {
-            return isRecording;
-        }
-    }
+		public boolean isRecording() {
+			synchronized (mutex) {
+				return isRecording;
+			}
+		}
 }

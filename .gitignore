@@ -5,3 +5,7 @@
 .pub/
 pubspec.lock
 build/
+
+
+#vi or vim tmp file
+*.swp

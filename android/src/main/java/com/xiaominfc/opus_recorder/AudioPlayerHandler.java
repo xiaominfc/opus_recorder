@@ -8,89 +8,85 @@ import io.flutter.Log;
 import top.oply.opuslib.OpusPlayer;
 
 public class AudioPlayerHandler{
-    private String currentPlayPath = null;
-    private static AudioPlayerHandler instance = null;
+	private String currentPlayPath = null;
+	private static AudioPlayerHandler instance = null;
 
-    public static  AudioPlayerHandler getInstance() {
-        if (null == instance) {
-            synchronized(AudioPlayerHandler.class){
-                instance = new AudioPlayerHandler();
-            }
-        }
-        return instance;
-    }
-
-
-    //语音播放的模式
-    public  void setAudioMode(int mode,Context ctx) {
-        if (mode != AudioManager.MODE_NORMAL && mode != AudioManager.MODE_IN_CALL) {
-            return;
-        }
-        AudioManager audioManager = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
-        audioManager.setMode(mode);
-    }
-
-    /**messagePop调用*/
-    public int getAudioMode(Context ctx) {
-        AudioManager audioManager = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
-        return audioManager.getMode();
-    }
-
-    public void clear(){
-        if (isPlaying()){
-            stopPlayer();
-        }
-        instance = null;
-    }
+	public static  AudioPlayerHandler getInstance() {
+		if (null == instance) {
+			synchronized(AudioPlayerHandler.class){
+				instance = new AudioPlayerHandler();
+			}
+		}
+		return instance;
+	}
 
 
-    private AudioPlayerHandler() {
-    }
+	//语音播放的模式
+	public  void setAudioMode(int mode,Context ctx) {
+		if (mode != AudioManager.MODE_NORMAL && mode != AudioManager.MODE_IN_CALL) {
+			return;
+		}
+		AudioManager audioManager = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
+		audioManager.setMode(mode);
+	}
 
-    public interface AudioListener{
-        public void onStop();
-    }
+	public int getAudioMode(Context ctx) {
+		AudioManager audioManager = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
+		return audioManager.getMode();
+	}
 
-    private AudioListener audioListener;
+	public void clear(){
+		if (isPlaying()){
+			stopPlayer();
+		}
+		instance = null;
+	}
 
-    public void setAudioListener(AudioListener audioListener) {
-        this.audioListener = audioListener;
-    }
 
-    private void stopAnimation(){
-        if(audioListener!=null){
-            audioListener.onStop();
-        }
-    }
+	private AudioPlayerHandler() {
+	}
 
-    public void stopPlayer() {
-        try {
-            OpusPlayer.getInstance().stop();
-        } catch (Exception e) {
-            Log.i("xiaominfc",e.getMessage());
-            e.printStackTrace();
-        }finally {
-            stopAnimation();
-            currentPlayPath = null;
-        }
-    }
+	public interface AudioListener{
+		public void onStop();
+	}
 
-    public boolean isPlaying() {
-        return null != currentPlayPath;
-    }
+	private AudioListener audioListener;
 
-    public void startPlay(String filePath) {
-        this.currentPlayPath = filePath;
-        try {
-            OpusPlayer.getInstance().play(filePath);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.i("xiaominfc",e.getMessage());
-            stopAnimation();
-        }
-    }
+	public void setAudioListener(AudioListener audioListener) {
+		this.audioListener = audioListener;
+	}
 
-    public String getCurrentPlayPath() {
-        return currentPlayPath;
-    }
+	private void stopAnimation(){
+		if(audioListener!=null){
+			audioListener.onStop();
+		}
+	}
+
+	public void stopPlayer() {
+		try {
+			OpusPlayer.getInstance().stop();
+		} catch (Exception e) {
+		
+		}finally {
+			stopAnimation();
+			currentPlayPath = null;
+		}
+	}
+
+	public boolean isPlaying() {
+		return null != currentPlayPath;
+	}
+
+	public void startPlay(String filePath) {
+		this.currentPlayPath = filePath;
+		try {
+			OpusPlayer.getInstance().play(filePath);
+		} catch (Exception e) {
+			stopAnimation();
+		}
+	}
+
+	public String getCurrentPlayPath() {
+		return currentPlayPath;
+	}
 }
