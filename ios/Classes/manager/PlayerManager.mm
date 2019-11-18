@@ -121,7 +121,7 @@ static PlayerManager *mPlayerManager = nil;
 - (void)playAudioWithFileName:(NSString *)filename playerType:(PlayerType)type delegate:(id<PlayingDelegate>)newDelegate
 {
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
-    if ([filename rangeOfString:@".spx"].location != NSNotFound) {
+    if ([filename rangeOfString:@".spx"].location != NSNotFound || [filename rangeOfString:@".audio"].location != NSNotFound) {
         [self stopPlaying];
         self.delegate = newDelegate;
         

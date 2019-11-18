@@ -9,6 +9,9 @@ abstract class OpusRecorderInf {
 
 
 class OpusRecorder {
+
+  static final int MODE_NORMAL = 1;
+  static final int MODE_IN_CALL = 2;
  
   static const MethodChannel _channel =
       const MethodChannel('opus_recorder');
@@ -28,6 +31,11 @@ class OpusRecorder {
 
   static Future playFile(String filePath) async {
     return _channel.invokeMethod('playFile',[filePath]);
+  }
+
+  static Future playFileWithMode(String filePath, int mode) {
+    // mode maybe MODE_NORMAL or MODE_IN_CALL 
+    return _channel.invokeMethod('playFileWithMode',[filePath,mode]);
   }
 
   Future<dynamic> _handelCall(MethodCall methodCall) {

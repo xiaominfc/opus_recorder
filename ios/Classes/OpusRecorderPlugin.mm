@@ -1,6 +1,10 @@
 #import "OpusRecorderPlugin.h"
 
 
+#define MODE_NORMAL 1
+#define MODE_IN_CALL 2
+
+
 @interface OpusRecorderPlugin()
 @property (nonatomic, strong) FlutterMethodChannel* channel;
 @end
@@ -31,6 +35,15 @@
       NSLog(@"playFile:%@",call.arguments[0]);
       //[[PlayerManager sharedManager] playingFileName:call.arguments[0]];
       [[PlayerManager sharedManager]playAudioWithFileName:call.arguments[0] delegate:self];
+  }else if([@"playFileWithMode" isEqualToString:call.method]) {
+      NSString *path = call.arguments[0];
+      int mode = [call.arguments[1] intValue];
+      if(mode == MODE_IN_CALL) {
+          [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
+      }else {
+          [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+      }
+      [[PlayerManager sharedManager]playAudioWithFileName:path delegate:self];
   }
   else {
     result(FlutterMethodNotImplemented);
