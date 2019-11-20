@@ -70,7 +70,7 @@ static PlayerManager *mPlayerManager = nil;
 }
 
 - (void)playAudioWithFileName:(NSString *)filename delegate:(id<PlayingDelegate>)newDelegate {
-    if ( ! filename) {
+    if (!filename) {
         return;
     }
     
@@ -80,13 +80,12 @@ static PlayerManager *mPlayerManager = nil;
         [[AVAudioSession sharedInstance] setActive:YES error:nil];
         [self stopPlaying];
         self.delegate = newDelegate;
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
         self.decapsulator = [[Decapsulator alloc] initWithFileName:filename];
         self.decapsulator.delegate = self;
-        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
         [self startProximityMonitering];
         _playingFileName = [filename copy];
         [self.decapsulator play];
-        
     }
     else if ([filename rangeOfString:@".mp3"].location != NSNotFound) {
         if ( ! [[NSFileManager defaultManager] fileExistsAtPath:filename]) {
@@ -124,7 +123,6 @@ static PlayerManager *mPlayerManager = nil;
     if ([filename rangeOfString:@".spx"].location != NSNotFound || [filename rangeOfString:@".audio"].location != NSNotFound) {
         [self stopPlaying];
         self.delegate = newDelegate;
-        
         self.decapsulator = [[Decapsulator alloc] initWithFileName:filename];
         self.decapsulator.delegate = self;
         [self.decapsulator play];

@@ -56,4 +56,8 @@
     [_channel invokeMethod:@"finishedRecord" arguments:@[filePath, [NSNumber numberWithDouble:interval] ]];
 }
 
+- (void)playingStoped {
+    NSLog(@"playingStoped");
+}
+
 @end

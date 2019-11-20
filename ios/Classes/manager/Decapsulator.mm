@@ -60,7 +60,7 @@
     if (self.player) {
         [self.player stopPlay];
     }
-//    [self playingingOver:nil];
+    //[self playingingOver:nil];
 }
 
 #pragma mark -
