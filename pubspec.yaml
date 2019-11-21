@@ -1,7 +1,7 @@
 name: opus_recorder
 description: 移植过来用于录制播放opus格式音频的flutter插件.
 version: 0.0.2
-author: xiaominfc <xiaominfc@126.com>
+author: xiaominfc <xiaominfc@gmail.com>
 homepage: https://github.com/xiaominfc/opus_recorder
 
 environment:
